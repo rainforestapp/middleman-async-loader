@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'middleman-async-loader'
-  s.version     = '1.0.1'
+  s.version     = '1.0.2'
   s.date        = '2016-10-04'
   s.summary     = "Asyncronously inject CSS & JS files. To find out more go to https://github.com/rainforestapp/middleman-async-loader"
   s.description = "Asyncronously inject CSS & JS files"

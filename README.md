@@ -21,3 +21,10 @@ The helper generates javascript. So you need to use it inside a script tag like 
   = async_js 'https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js', 'boom', 'whatever'
   = async_font 'https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700'
 ```
+
+And you can also load js assets like this:
+```haml
+%scripts
+  = async_js_in_order 'jquery', 'my-thing-dependent-on-jquery'
+```
+
