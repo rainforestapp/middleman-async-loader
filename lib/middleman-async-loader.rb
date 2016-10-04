@@ -21,10 +21,10 @@ class AsyncLoader < Middleman::Extension
     private
 
     def async_wrap string
-      "(function(){#{string})();"
+      "(function(){#{string}}());"
     end
 
-    def bundle_sources(sources, type, isFont)
+    def bundle_sources(sources, type, isFont = false)
       bootstrap() + async_wrap(sources.map { |source|
         "___asl('#{type.to_s}','#{asset_path(type, source)}'#{',true' if isFont});"
       }.reduce(:+))
