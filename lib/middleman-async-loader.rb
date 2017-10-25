@@ -1,6 +1,6 @@
 require 'middleman-core'
 
-class AsyncLoader < Middleman::Extension
+class Middleman::AsyncLoader < Middleman::Extension
   helpers do
     def load_css(*sources)
       bundle_sources(sources, :css)
@@ -51,5 +51,3 @@ class AsyncLoader < Middleman::Extension
     end
   end
 end
-
-AsyncLoader.register(:async_loader)
