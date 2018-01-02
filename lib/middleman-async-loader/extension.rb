@@ -59,7 +59,7 @@ class Middleman::AsyncLoader < Middleman::Extension
     def bootstrap
       return "" if @has_loaded == true
       @has_loaded = true
-      "window.___asl=function(t,f,wf,i,c){var d=document,e=d.createElement(t=='css'?'link':'script');e[t=='css'?'href':'src']=f;e[t=='css'?'rel':'type']=t=='css'?'stylesheet':'text/javascript';if(wf){e.rel='subresource'};e.integrity=i;e.crossorigin=c;d.body.appendChild(e);return e;};"
+      "window.___asl=function(t,f,wf,i,c){var d=document,e=d.createElement(t=='css'?'link':'script');e[t=='css'?'href':'src']=f;e[t=='css'?'rel':'type']=t=='css'?'stylesheet':'text/javascript';if(wf){e.rel='subresource'};e.integrity=i;e.crossOrigin=c;d.body.appendChild(e);return e;};"
     end
   end
 end
