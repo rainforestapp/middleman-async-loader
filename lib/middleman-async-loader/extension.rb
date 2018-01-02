@@ -3,21 +3,21 @@ require 'middleman-core'
 class Middleman::AsyncLoader < Middleman::Extension
   helpers do
     def load_css(*sources)
-      bundle_sources(sources, :css)
+      bundle_sources(sources, :css, false, **opts)
     end
 
-    def load_font(*sources)
-      bundle_sources(sources, :css, true)
+    def load_font(*sources, **opts)
+      bundle_sources(sources, :css, true, **opts)
     end
 
-    def load_js(*sources)
-      bundle_sources(sources, :js, true)
+    def load_js(*sources, **opts)
+      bundle_sources(sources, :js, true, **opts)
     end
 
-    def load_js_in_order(*sources)
+    def load_js_in_order(*sources, **opts)
      string = ''
      sources.reverse.each do |source|
-        string = "___asl('js','#{asset_path(:js, source)}')#{maybe_on_load(string)};"
+        string = "___asl('js','#{asset_path(:js, source)}'#{options_string(opts)})#{maybe_on_load(string)};"
       end
       bootstrap() + string
     end
@@ -29,6 +29,18 @@ class Middleman::AsyncLoader < Middleman::Extension
 
     private
 
+    def options_string **opts
+      s = ",'"
+      if opts.has_key? :integrity
+        s += " ".join(Array(opts[:integrity]))
+      end
+      s += "','"
+      if opts.has_key? :crossorigin
+        s += opts[:crossorigin]
+      end
+      return s + "'"
+    end
+
     def async_wrap string
       "(function(){#{string}}());"
     end
@@ -38,16 +50,16 @@ class Middleman::AsyncLoader < Middleman::Extension
       ".onload=function(){#{string}}"
     end
 
-    def bundle_sources(sources, type, isFont = false)
+    def bundle_sources(sources, type, isFont = false, **opts)
       bootstrap() + async_wrap(sources.map do |source|
-        "___asl('#{type.to_s}','#{asset_path(type, source)}'#{',true' if isFont});"
+        "___asl('#{type.to_s}','#{asset_path(type, source)}'#{',true' if isFont},#{options_string(opts)});"
       end.reduce(:+))
     end
 
     def bootstrap
       return "" if @has_loaded == true
       @has_loaded = true
-      "window.___asl=function(t,f,wf){var d=document,e=d.createElement(t=='css'?'link':'script');e[t=='css'?'href':'src']=f;e[t=='css'?'rel':'type']=t=='css'?'stylesheet':'text/javascript';if(wf){e.rel='subresource'};d.body.appendChild(e);return e;};"
+      "window.___asl=function(t,f,wf,i,c){var d=document,e=d.createElement(t=='css'?'link':'script');e[t=='css'?'href':'src']=f;e[t=='css'?'rel':'type']=t=='css'?'stylesheet':'text/javascript';if(wf){e.rel='subresource'};e.integrity=i;e.crossorigin=c;d.body.appendChild(e);return e;};"
     end
   end
 end
