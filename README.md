@@ -28,3 +28,14 @@ And you can also load js assets like this:
   = async_js_in_order 'jquery', 'my-thing-dependent-on-jquery'
 ```
 
+#### Cross-Origin requests
+You can specify the cross-origin attribute with `crossorigin`. See [CORS settings attribute](https://www.w3.org/TR/html5/infrastructure.html#cors-settings-attribute) for more info.
+
+#### Subresource integrity
+You can add a single or an array of subresource integrity hash(es) as
+```haml
+%script
+  = async_js 'https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js', integrity: 'sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq', crossorigin: 'anonymous' 
+```
+
+Note that the `crossorigin` attribute is mandatory in that case.
