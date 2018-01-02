@@ -2,7 +2,7 @@ require 'middleman-core'
 
 class Middleman::AsyncLoader < Middleman::Extension
   helpers do
-    def load_css(*sources)
+    def load_css(*sources, **opts)
       bundle_sources(sources, :css, false, **opts)
     end
 
@@ -11,13 +11,13 @@ class Middleman::AsyncLoader < Middleman::Extension
     end
 
     def load_js(*sources, **opts)
-      bundle_sources(sources, :js, true, **opts)
+      bundle_sources(sources, :js, false, **opts)
     end
 
     def load_js_in_order(*sources, **opts)
      string = ''
      sources.reverse.each do |source|
-        string = "___asl('js','#{asset_path(:js, source)}'#{options_string(opts)})#{maybe_on_load(string)};"
+        string = "___asl('js','#{asset_path(:js, source)}',false,#{options_string(opts)})#{maybe_on_load(string)};"
       end
       bootstrap() + string
     end
@@ -30,9 +30,9 @@ class Middleman::AsyncLoader < Middleman::Extension
     private
 
     def options_string **opts
-      s = ",'"
+      s = "'"
       if opts.has_key? :integrity
-        s += " ".join(Array(opts[:integrity]))
+        s += Array(opts[:integrity]).join " "
       end
       s += "','"
       if opts.has_key? :crossorigin
@@ -52,7 +52,7 @@ class Middleman::AsyncLoader < Middleman::Extension
 
     def bundle_sources(sources, type, isFont = false, **opts)
       bootstrap() + async_wrap(sources.map do |source|
-        "___asl('#{type.to_s}','#{asset_path(type, source)}'#{',true' if isFont},#{options_string(opts)});"
+        "___asl('#{type.to_s}','#{asset_path(type, source)}',#{isFont ? 'true':'false'},#{options_string(opts)});"
       end.reduce(:+))
     end
 
