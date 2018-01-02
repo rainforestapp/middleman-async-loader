@@ -32,7 +32,7 @@ class Middleman::AsyncLoader < Middleman::Extension
     def options_string **opts
       s = "'"
       if opts.has_key? :integrity
-        s += Array(opts[:integrity])).join " "
+        s += Array(opts[:integrity]).join " "
       end
       s += "','"
       if opts.has_key? :crossorigin
